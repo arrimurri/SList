@@ -14,6 +14,9 @@ namespace HTyo {
     ~TestClass();
 
     void test(bool, std::string const&);
+
+    private:
+    void double_and_copy_error_array();
   };
 
   class TestError {
