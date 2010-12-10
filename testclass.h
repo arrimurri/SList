@@ -13,20 +13,13 @@ namespace HTyo {
     TestClass(int);
     ~TestClass();
 
+    void operator()(bool, std::string const&);
     void test(bool, std::string const&);
+
+    std::string report();
 
     private:
     void double_and_copy_error_array();
-  };
-
-  class TestError {
-    std::string error;
-
-    public:
-    TestError(const std::string&);
-    ~TestError();
-
-    std::string get_error();
   };
 }
 
