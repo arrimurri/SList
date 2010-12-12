@@ -9,6 +9,8 @@ namespace HTyo {
     std::string contents;
     Elem *next;
 
+    friend class SList;
+
     public:
     Elem(std::string s);
     Elem(const Elem&);

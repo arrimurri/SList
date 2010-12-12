@@ -61,7 +61,7 @@ namespace HTyo {
 
     std::string a("");
     for(int i = 0; i < count_errors; ++i) {
-      a += "Test with the following description failed:";
+      a += "Test with the following description failed:\n";
       a += "\t" + error_array[i] + "\n";
     }
 
