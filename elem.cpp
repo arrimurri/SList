@@ -5,6 +5,9 @@
 
 namespace HTyo {
 
+  Elem::Elem()
+    : contents(""), next(0) { }
+
   Elem::Elem(std::string s)
     : contents(s), next(0) { }
 

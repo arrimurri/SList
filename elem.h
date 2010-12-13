@@ -10,8 +10,10 @@ namespace HTyo {
     Elem *next;
 
     friend class SList;
+    friend class SListIter;
 
     public:
+    Elem();
     Elem(std::string s);
     Elem(const Elem&);
     ~Elem();

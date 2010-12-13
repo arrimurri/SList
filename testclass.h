@@ -1,6 +1,8 @@
 #ifndef TESTCLASS_TYPE
 #define TESTCLASS_TYPE
 
+#include "slist.h"
+
 namespace HTyo {
   
   class TestClass {
@@ -15,6 +17,7 @@ namespace HTyo {
 
     void operator()(bool, std::string const&);
     void test(bool, std::string const&);
+    void set_error(std::string);
 
     std::string report();
 

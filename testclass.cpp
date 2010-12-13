@@ -36,8 +36,12 @@ namespace HTyo {
     }
   }
 
+  void TestClass::set_error(std::string s) {
+    error_array[count_errors] = s;
+    ++count_errors;
+  }
+
   void TestClass::double_and_copy_error_array() {
-    std::cout << "Int the doubling thingie" << std::endl;
     int new_size = array_size * 2;
     std::string *new_array = new std::string[new_size];
     
