@@ -5,6 +5,11 @@
 
 namespace HTyo {
   
+  /**
+   * This is my simple but powerful testclass. This class has one test function 
+   * which checks for equality. It also has the operator() defined, so that 
+   * you can call the tests on the object.
+   */
   class TestClass {
     int count_errors;
     std::string *error_array;

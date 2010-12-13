@@ -116,7 +116,7 @@ namespace HTyo {
     }
 
     prev->next = b->next;
-    Elem ret = *b;
+    Elem ret(*b);
     delete &(*b);
 
     return ret.get_contents();
@@ -161,6 +161,7 @@ namespace HTyo {
 
     return out;
   }
+
 
   std::istream& operator>>(std::istream& in, SList& l) {
     std::string tmp;

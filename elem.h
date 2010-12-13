@@ -5,6 +5,11 @@
 
 namespace HTyo {
 
+  /**
+   * This class is a container class for the SList class. This class 
+   * only holds one element and a pointer to the next element. The
+   * operations on this class is pretty self-explanatory.
+   */
   class Elem {
     std::string contents;
     Elem *next;
