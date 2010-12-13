@@ -48,11 +48,11 @@ namespace HTyo {
   }
 
   std::string SList::pop_front() {
+    std::string ret = this->get_front(); // throws exception if empty list
     Elem *tmp = front;
-    Elem ret = *tmp;
     front = front->next;
     delete tmp;
-    return ret.get_contents();
+    return ret;
   }
 
   void SList::insert_after(int n, std::string s) {
@@ -89,6 +89,55 @@ namespace HTyo {
     }
   }
 
+  std::string SList::erase_after(int n) {
+    if(front == 0) {
+      HTyoException e("Can not erase from an empty list");
+      throw e;
+    }
+
+    if(n == 0) {
+      return this->pop_front();
+    }
+
+    SListIter b = this->begin();
+    SListIter e = this->end();
+    Elem *prev = 0;
+
+    for(int i = 0; i < n; ++i) {
+      //std::cout << "In erase after"  << std::endl;
+      //std::cout << &*b << std::endl;
+      //std::cout << b->get_contents() << std::endl;
+      if(b == e) {
+        HTyoException e("Can not erase, index over bounds");
+        throw e;
+      }
+      prev = &(*b);
+      ++b;
+    }
+
+    prev->next = b->next;
+    Elem ret = *b;
+    delete &(*b);
+
+    return ret.get_contents();
+  }
+
+  void SList::reverse() {
+    SList tmp;
+    Elem *tmp_elem = front;
+    while(tmp_elem) {
+      tmp.push_front(tmp_elem->get_contents());
+      tmp_elem = tmp_elem->next;
+    }
+    tmp.swap(*this);
+  }
+
+  void SList::swap(SList& l) {
+    Elem *tmp = front;
+    front = l.front;
+    l.front = tmp;
+  }
+
   SListIter SList::begin() {
     SListIter s(front);
     return s;
@@ -97,6 +146,35 @@ namespace HTyo {
   SListIter SList::end() {
     SListIter s(0);
     return s;
+  }
+
+  std::ostream& operator<<(std::ostream& out, SList& l) {
+    std::string a("");
+
+    for(SListIter i = l.begin(); i != l.end(); ++i) {
+      a += i->get_contents() + " ";
+    }
+
+    out << "{ ";
+    out << a;
+    out << "}";
+
+    return out;
+  }
+
+  std::istream& operator>>(std::istream& in, SList& l) {
+    std::string tmp;
+    if(in >> tmp) {
+      if(tmp != "{")
+        return in;
+    }
+    while(in >> tmp) {
+      if(tmp == "}")
+        break;
+      l.push_front(tmp);
+    }
+
+    return in;
   }
 
   // Implementation of the general Exception

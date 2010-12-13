@@ -17,7 +17,8 @@ namespace HTyo {
     SList(const SList&);
     ~SList();
 
-    SList& operator=(const SList&);
+    friend std::ostream& operator<<(std::ostream&, SList&);
+    friend std::istream& operator>>(std::istream&, SList&);
 
     std::string get_front();
     void push_front(std::string);
@@ -26,21 +27,10 @@ namespace HTyo {
     std::string erase_after(int);
 
     void reverse();
-    void swap(SList);
+    void swap(SList&);
 
     SListIter begin();
     SListIter end();
-  };
-
-  class HTyoException { 
-    std::string error;
-
-    public:
-    HTyoException(std::string s);
-
-    ~HTyoException(); 
-
-    std::string get_error();
   };
 
   class SListIter {
@@ -59,6 +49,17 @@ namespace HTyo {
     bool operator!=(SListIter const&);
 
     Elem *get_pointer();
+  };
+
+  class HTyoException { 
+    std::string error;
+
+    public:
+    HTyoException(std::string s);
+
+    ~HTyoException(); 
+
+    std::string get_error();
   };
 
 };

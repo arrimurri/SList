@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "elem.h"
 #include "slist.h"
@@ -51,6 +52,54 @@ void testSListIter(HTyo::TestClass& test) {
   }
   test(i == 3, "The iterator should have iterated over 3 elements");
 
+}
+
+void testSList(HTyo::TestClass& test) {
+  using HTyo::SList;
+  using HTyo::Elem;
+  using HTyo::SListIter;
+
+  SList l;
+
+  bool catched = false;
+  try {
+    // Getting front of empty list should throw EmptyListException exception
+    std::string ret = l.get_front();
+  }
+  catch (HTyo::HTyoException& e ) {
+    catched = true;
+  }
+  if(!catched) {
+    test.set_error("Getting front of empty list should throw HTyoException");
+  }
+
+  std::string to_be_popped("to be popped");
+  l.push_front(to_be_popped);
+  test(l.pop_front() == to_be_popped, "pop_front should pop the first element in the list");
+  
+  // Test that the list is again empty
+  catched = false;
+  try {
+    // Getting front of empty list should throw EmptyListException exception
+    std::string ret = l.pop_front();
+  }
+  catch (HTyo::HTyoException& e ) {
+    catched = true;
+  }
+  if(!catched) {
+    test.set_error("Popping front of empty list should throw HTyoException");
+  }
+  std::string first_elem("First Elem");
+  std::string second_elem("Second Elem");
+  std::string third_elem("Third Elem");
+  l.push_front(first_elem);
+  test(l.get_front() == first_elem, "The first elem of the list should containthe string 'First Elem'");
+  l.push_front(second_elem);
+  test(l.get_front() == second_elem, "The first elem of the list should contain the string 'Second Elem'");
+  l.push_front(third_elem);
+  test(l.get_front() == third_elem, "The first elem of the list should contain the string 'Third Elem'");
+
+  // Multiple tests for SList::insert_after()
   std::string inafter("I'm the inafter thingie");
   l.insert_after(1, inafter);
   SListIter sli = l.begin();
@@ -70,7 +119,7 @@ void testSListIter(HTyo::TestClass& test) {
   test(prev->get_contents() == inafter2, "The last element should have been added");
   test(sli == l.end(), "The element after the last element should be the end element 0 (NULL)");
 
-  bool catched = false;
+  catched = false;
   try {
     std::string inafter3("This should not work");
     l.insert_after(8, inafter3);
@@ -81,35 +130,84 @@ void testSListIter(HTyo::TestClass& test) {
   if(!catched) {
     test.set_error("Inserting after the end of a list should throw HTyoException");
   }
-}
 
-void testSList(HTyo::TestClass& test) {
-  using HTyo::SList;
-  using HTyo::Elem;
+  // Tests for erase_after
+  SList list;
+  list.push_front("first");
+  list.push_front("second");
+  list.push_front("third");
+  list.push_front("fourth");
 
-  SList l;
+  std::string test_string("");
+  test_string = list.erase_after(0); // Should be the same as pop_front()
+  test(test_string == "fourth", "Erasing with a index 0 should pop the first element");
+  list.push_front("fourth");
+  test(list.erase_after(1) == "third", "Erasing the second argument should now yield a 3");
+  test(list.erase_after(2) == "first", "Erasing the last argument should now yield a 1");
 
-  bool catched = false;
+  int i = 0;
+  for(SListIter s = list.begin(); s != list.end(); ++s) {
+    ++i;
+  }
+  test(i == 2, "The list should now contain 2 elements");
+
+  catched = false;
   try {
-    // Getting front of empty list should throw EmptyListException exception
-    std::string ret = l.get_front();
+    std::string error = list.erase_after(2);
   }
   catch (HTyo::HTyoException& e ) {
     catched = true;
   }
   if(!catched) {
-    test.set_error("Getting front of empty list should throw HTyoException");
+    test.set_error("Erasing after the last element should throw an HTyoException");
   }
-  
-  std::string first_elem("First Elem");
-  std::string second_elem("Second Elem");
-  std::string third_elem("Third Elem");
-  l.push_front(first_elem);
-  test(l.get_front() == first_elem, "The first elem of the list should containthe string 'First Elem'");
-  l.push_front(second_elem);
-  test(l.get_front() == second_elem, "The first elem of the list should contain the string 'Second Elem'");
-  l.push_front(third_elem);
-  test(l.get_front() == third_elem, "The first elem of the list should contain the string 'Third Elem'");
+
+  // Tests for the swap function
+  SList swap1;
+  SList swap2;
+
+  swap1.push_front("First");
+  swap1.push_front("Second");
+  swap1.push_front("Third");
+  swap2.push_front("First2");
+  swap2.push_front("Second2");
+  swap2.push_front("Third2");
+
+  swap2.swap(swap1);
+  test(swap1.pop_front() == "Third2", "The list contents should have been swapped");
+  test(swap1.pop_front() == "Second2", "The list contents should have been swapped");
+  test(swap1.pop_front() == "First2", "The list contents should have been swapped");
+  test(swap2.pop_front() == "Third", "The list contents should have been swapped");
+  test(swap2.pop_front() == "Second", "The list contents should have been swapped");
+  test(swap2.pop_front() == "First", "The list contents should have been swapped");
+
+  // Tests for reverse function
+  SList reverse;
+  reverse.push_front("First");
+  reverse.push_front("Second");
+  reverse.push_front("Third");
+
+  reverse.reverse();
+  test(reverse.pop_front() == "First", "The elements in the list should be in reverse order");
+  test(reverse.pop_front() == "Second", "The elements in the list should be in reverse order");
+  test(reverse.pop_front() == "Third", "The elements in the list should be in reverse order");
+
+  // Testing the output
+  SList going_out;
+  going_out.push_front("First");
+  going_out.push_front("Second");
+  going_out.push_front("Third");
+  std::ostringstream a;
+  a << going_out;
+  test(a.str() == "{ Third Second First }", "Testing output of SList");
+
+  // Testing input
+  SList coming_in;
+  std::istringstream in("{ First Second Third }");
+  in >> coming_in;
+  test(coming_in.pop_front() == "Third", "Testing input of SLists");
+  test(coming_in.pop_front() == "Second", "Testing input of SLists");
+  test(coming_in.pop_front() == "First", "Testing input of SLists");
 }
 
 void testElem(HTyo::TestClass& test) {
